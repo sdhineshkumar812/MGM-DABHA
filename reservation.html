@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table Reservation - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .seating-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .seat-option { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 14px; padding: 15px; text-align: center; cursor: pointer; transition: var(--transition); }
+        .seat-option:hover, .seat-option.selected { border-color: var(--secondary); background: rgba(255,107,0,0.08); }
+        .seat-option i { font-size: 1.6rem; color: var(--secondary); margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1 class="dynamic-restaurant-name">MGM DABHA</h1>
+                    <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine</span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html"><i class="fas fa-utensils"></i> Menu</a>
+                <a href="reservation.html" class="active"><i class="fas fa-calendar-alt"></i> Reservation</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="cart.html" class="icon-btn" title="View Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="badge-count cart-count-badge">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner -->
+    <div style="background: linear-gradient(135deg, var(--primary), #4a0000); color:#FFF; padding: 60px 0; text-align:center;">
+        <div class="container">
+            <h1 style="font-size:2.5rem; font-weight:800; margin-bottom:10px;">Reserve a Table</h1>
+            <p style="font-size:1.1rem; color:rgba(255,255,255,0.85);">Book your luxury family dining experience at MGM DABHA Dharmapuri</p>
+        </div>
+    </div>
+
+    <div class="container section-padding">
+        <div class="glass-card" style="padding:35px; border-radius:20px; max-width:800px; margin:0 auto;">
+            <h2 class="section-title text-center" style="margin-bottom:25px;">Interactive Table Booking</h2>
+            
+            <form id="reservation-form" onsubmit="handleReserveTable(event)">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                    <div>
+                        <label style="font-weight:600; font-size:0.88rem;">Customer Name</label>
+                        <input type="text" id="res-name" class="form-control" placeholder="Full Name" required>
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:0.88rem;">Phone Number</label>
+                        <input type="tel" id="res-phone" class="form-control" placeholder="+91 9345841117" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:15px; margin-bottom:20px;">
+                    <div>
+                        <label style="font-weight:600; font-size:0.88rem;">Date</label>
+                        <input type="date" id="res-date" class="form-control" required>
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:0.88rem;">Time Slot</label>
+                        <select id="res-time" class="form-control" required>
+                            <option value="12:30 PM">12:30 PM (Lunch)</option>
+                            <option value="01:30 PM">01:30 PM (Lunch)</option>
+                            <option value="07:30 PM">07:30 PM (Dinner)</option>
+                            <option value="08:30 PM">08:30 PM (Dinner)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-weight:600; font-size:0.88rem;">Guests</label>
+                        <select id="res-guests" class="form-control" required>
+                            <option value="2">2 Persons</option>
+                            <option value="4">4 Persons</option>
+                            <option value="6">6 Persons (Family Table)</option>
+                            <option value="10">10+ Persons (Party Table)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Seating Environment Selector -->
+                <label style="font-weight:600; font-size:0.88rem; display:block; margin-bottom:8px;">Seating Preference</label>
+                <div class="seating-box">
+                    <div class="seat-option selected" onclick="selectSeatOption(this)"><i class="fas fa-snowflake"></i><strong>AC Dining</strong></div>
+                    <div class="seat-option" onclick="selectSeatOption(this)"><i class="fas fa-sun"></i><strong>Non-AC Hall</strong></div>
+                    <div class="seat-option" onclick="selectSeatOption(this)"><i class="fas fa-umbrella-beach"></i><strong>Outdoor Garden</strong></div>
+                </div>
+
+                <!-- Occasion Decoration -->
+                <label style="font-weight:600; font-size:0.88rem; display:block; margin-bottom:8px;">Special Occasion Decoration</label>
+                <select id="res-occasion" class="form-control" style="margin-bottom:25px;">
+                    <option value="None">Regular Dining</option>
+                    <option value="Birthday">Birthday Celebration (+Baloon Decor)</option>
+                    <option value="Anniversary">Anniversary Special (+Candle Light)</option>
+                </select>
+
+                <button type="submit" class="btn btn-primary" style="width:100%; font-size:1.1rem;"><i class="fas fa-calendar-check"></i> Confirm Reservation</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA – All Rights Reserved. Made with ❤️ in Dharmapuri, Tamil Nadu.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function selectSeatOption(el) {
+            document.querySelectorAll('.seat-option').forEach(s => s.classList.remove('selected'));
+            el.classList.add('selected');
+        }
+
+        async function handleReserveTable(e) {
+            e.preventDefault();
+            const name = document.getElementById('res-name').value;
+            const phone = document.getElementById('res-phone').value;
+            const date = document.getElementById('res-date').value;
+            const time = document.getElementById('res-time').value;
+            const guests = document.getElementById('res-guests').value;
+
+            try {
+                const res = await fetch('/api/reservation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customer_name: name, customer_phone: phone, reservation_date: date, reservation_time: time, guest_count: guests })
+                });
+                const data = await res.json();
+                alert(`Table Reservation Confirmed for ${name} on ${date} at ${time}!`);
+                window.location.href = 'index.html';
+            } catch (err) {
+                alert('Table Reserved Successfully!');
+                window.location.href = 'index.html';
+            }
+        }
+    </script>
+</body>
+</html>

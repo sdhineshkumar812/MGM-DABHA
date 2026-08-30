@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Settings Admin - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        :root {
+            --cs-primary: #d35400;
+            --cs-secondary: #8B0000;
+            --cs-gold: #f39c12;
+            --cs-card-bg: #ffffff;
+            --cs-shadow: 0 8px 25px rgba(0,0,0,0.08);
+            --cs-border: #f1f2f6;
+        }
+
+        body { background-color: #f8f9fa; color: #2c3e50; font-family: 'Poppins', sans-serif; }
+
+        .settings-container { max-width: 1000px; margin: 0 auto; padding-bottom: 50px; }
+        
+        .settings-card {
+            background: var(--cs-card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--cs-shadow);
+            border: 1px solid var(--cs-border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .settings-card:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
+
+        .card-header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--cs-primary);
+            border-bottom: 2px solid #fceae0;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .card-header-title i { color: var(--cs-gold); font-size: 1.3rem; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+        
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-weight: 600; font-size: 0.88rem; color: #34495e; }
+        .form-control {
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1.5px solid #dcdde1;
+            font-size: 0.92rem;
+            outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: #fdfdfd;
+        }
+        .form-control:focus { border-color: var(--cs-primary); box-shadow: 0 0 0 4px rgba(211, 84, 0, 0.12); background: #fff; }
+
+        .image-preview-box {
+            width: 100%;
+            height: 120px;
+            border-radius: 10px;
+            border: 2px dashed #dcdde1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: #fafafa;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .image-preview-box img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        .map-preview-box {
+            width: 100%;
+            height: 220px;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--cs-border);
+            margin-top: 10px;
+            background: #eee;
+        }
+        .map-preview-box iframe { width: 100%; height: 100%; border: 0; }
+
+        .action-bar {
+            position: sticky;
+            bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 18px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            border: 1px solid var(--cs-border);
+        }
+
+        .btn-cs {
+            padding: 12px 28px;
+            border-radius: 30px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-cs-primary { background: linear-gradient(135deg, var(--cs-primary), var(--cs-secondary)); color: #fff; box-shadow: 0 4px 15px rgba(211, 84, 0, 0.3); }
+        .btn-cs-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(211, 84, 0, 0.4); }
+        .btn-cs-reset { background: #f1f2f6; color: #57606f; }
+        .btn-cs-reset:hover { background: #e4e7ed; }
+        .btn-cs-preview { background: #27ae60; color: #fff; box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3); }
+        .btn-cs-preview:hover { transform: translateY(-2px); }
+
+        /* Toast Notifications */
+        #cs-toast {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #fff;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 9999;
+            animation: slideDown 0.3s ease;
+        }
+        #cs-toast.success { background: #2ecc71; box-shadow: 0 8px 25px rgba(46, 204, 113, 0.35); }
+        #cs-toast.error { background: #e74c3c; box-shadow: 0 8px 25px rgba(231, 76, 60, 0.35); }
+        @keyframes slideDown { from { transform: translateY(-20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    </style>
+</head>
+<body>
+
+    <!-- Toast Notification -->
+    <div id="cs-toast" class="success">
+        <i id="cs-toast-icon" class="fas fa-check-circle" style="font-size:1.3rem;"></i> 
+        <span id="cs-toast-msg">Settings Updated Successfully</span>
+    </div>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon" style="background:var(--cs-primary);"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN PORTAL</span>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="inventory.html" class="menu-item"><i class="fas fa-boxes"></i> Inventory Stock</a>
+            <a href="coupons.html" class="menu-item"><i class="fas fa-ticket-alt"></i> Coupons</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="contact-settings.html" class="menu-item active"><i class="fas fa-cog"></i> Contact Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h3><i class="fas fa-sliders" style="color:var(--cs-primary);"></i> Restaurant Business Contact Settings</h3>
+        </header>
+
+        <div class="admin-body">
+            <div class="settings-container">
+                <form id="save-contact-settings-form" enctype="multipart/form-data" onsubmit="saveSettings(event)">
+
+                    <!-- 1. Business Information Card -->
+                    <div class="settings-card">
+                        <div class="card-header-title">
+                            <i class="fas fa-store"></i> Business Information
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Restaurant Name</label>
+                                <input type="text" id="cs-name" name="restaurant_name" class="form-control" value="MGM DABHA" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Tagline</label>
+                                <input type="text" id="cs-tagline" name="tagline" class="form-control" value="Authentic South Indian & Multi-Cuisine Family Restaurant">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input type="text" id="cs-phone" name="phone" class="form-control" value="+91 9345841117" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" id="cs-email" name="email" class="form-control" value="sdhineshkumar7576@gmail.com" required>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>WhatsApp Number</label>
+                                <input type="text" id="cs-whatsapp" name="whatsapp" class="form-control" value="+91 9345841117" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Branding & Live Image Previews Card -->
+                    <div class="settings-card">
+                        <div class="card-header-title">
+                            <i class="fas fa-image"></i> Branding & Assets (PNG, JPG, JPEG Max 5MB)
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Upload Logo</label>
+                                <input type="file" id="input-logo" name="restaurant_logo" accept="image/png, image/jpeg, image/jpg" class="form-control" onchange="previewImage(this, 'preview-logo')">
+                                <div class="image-preview-box">
+                                    <img id="preview-logo" src="../images/logo.png" alt="Logo Preview">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Upload Banner</label>
+                                <input type="file" id="input-banner" name="banner_image" accept="image/png, image/jpeg, image/jpg" class="form-control" onchange="previewImage(this, 'preview-banner')">
+                                <div class="image-preview-box">
+                                    <img id="preview-banner" src="../images/banner.jpg" alt="Banner Preview">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Business Charges & Currency Card -->
+                    <div class="settings-card">
+                        <div class="card-header-title">
+                            <i class="fas fa-calculator"></i> Business Charges & Currency
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>GST Tax (%)</label>
+                                <input type="number" step="0.1" id="cs-gst" name="gst_tax" class="form-control" value="5.0" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Delivery Fee (₹)</label>
+                                <input type="number" step="1" id="cs-delfee" name="delivery_fee" class="form-control" value="40" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Minimum Order Amount (₹)</label>
+                                <input type="number" step="1" id="cs-minorder" name="min_order_amount" class="form-control" value="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Currency Symbol</label>
+                                <input type="text" id="cs-curr" name="currency_symbol" class="form-control" value="₹" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Address & Live Google Maps Embed Card -->
+                    <div class="settings-card">
+                        <div class="card-header-title">
+                            <i class="fas fa-map-marked-alt"></i> Address & Google Maps Embed
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Street Address</label>
+                                <input type="text" id="cs-address" name="address" class="form-control" value="Tomato Market Opposite MGM DABHA, Near Tomato Market" required>
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <input type="text" id="cs-city" name="city" class="form-control" value="Palacode" required>
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <input type="text" id="cs-state" name="state" class="form-control" value="Tamil Nadu" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Pincode</label>
+                                <input type="text" id="cs-pincode" name="pincode" class="form-control" value="636806" required>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Google Maps URL</label>
+                                <input type="text" id="cs-mapurl" name="google_map" class="form-control" value="https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806&output=embed" oninput="updateMapPreview(this.value)">
+                                <div class="map-preview-box">
+                                    <iframe id="preview-map" src="https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806&output=embed"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Working Hours Card -->
+                    <div class="settings-card">
+                        <div class="card-header-title">
+                            <i class="fas fa-clock"></i> Working Hours (Open Daily • 07:00 AM – 11:00 PM)
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Opening Time</label>
+                                <input type="time" id="cs-opentime" name="opening_time" class="form-control" value="07:00" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Closing Time</label>
+                                <input type="time" id="cs-closetime" name="closing_time" class="form-control" value="23:00" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 6. Social Media Links Card -->
+                    <div class="settings-card">
+                        <div class="card-header-title">
+                            <i class="fas fa-share-nodes"></i> Social Media Links
+                        </div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label><i class="fab fa-facebook" style="color:#3b5998;"></i> Facebook</label>
+                                <input type="url" id="cs-fb" name="facebook" class="form-control" value="https://facebook.com/mgmdabha">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-instagram" style="color:#e1306c;"></i> Instagram</label>
+                                <input type="url" id="cs-insta" name="instagram" class="form-control" value="https://instagram.com/mgmdabha">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fab fa-youtube" style="color:#ff0000;"></i> YouTube</label>
+                                <input type="url" id="cs-yt" name="youtube" class="form-control" value="https://youtube.com/mgmdabha">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar Buttons -->
+                    <div class="action-bar">
+                        <button type="button" class="btn-cs btn-cs-reset" onclick="resetSettingsForm()"><i class="fas fa-undo"></i> Reset Form</button>
+                        <div style="display:flex; gap:12px;">
+                            <a href="../index.html" target="_blank" class="btn-cs btn-cs-preview"><i class="fas fa-external-link-alt"></i> Preview Website Changes</a>
+                            <button type="submit" id="btn-save" class="btn-cs btn-cs-primary"><i class="fas fa-save"></i> Save Settings</button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadContactSettings);
+
+        async function loadContactSettings() {
+            try {
+                const res = await fetch('/contact-settings');
+                const data = await res.json();
+                if (data.success) {
+                    document.getElementById('cs-name').value = data.restaurant_name || 'MGM DABHA';
+                    document.getElementById('cs-tagline').value = data.tagline || 'Authentic South Indian & Multi-Cuisine Family Restaurant';
+                    document.getElementById('cs-phone').value = data.phone || '+91 9345841117';
+                    document.getElementById('cs-email').value = data.email || 'sdhineshkumar7576@gmail.com';
+                    document.getElementById('cs-whatsapp').value = data.whatsapp || '+91 9345841117';
+
+                    document.getElementById('cs-gst').value = data.gst_tax || 5.0;
+                    document.getElementById('cs-delfee').value = data.delivery_fee || 40;
+                    document.getElementById('cs-minorder').value = data.min_order_amount || 100;
+                    document.getElementById('cs-curr').value = data.currency_symbol || '₹';
+
+                    document.getElementById('cs-address').value = data.address || 'Tomato Market Opposite MGM DABHA, Near Tomato Market';
+                    document.getElementById('cs-city').value = data.city || 'Palacode';
+                    document.getElementById('cs-state').value = data.state || 'Tamil Nadu';
+                    document.getElementById('cs-pincode').value = data.pincode || '636806';
+                    document.getElementById('cs-mapurl').value = data.google_map || 'https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806&output=embed';
+                    updateMapPreview(document.getElementById('cs-mapurl').value);
+
+                    document.getElementById('cs-opentime').value = data.opening_time ? data.opening_time.substring(0, 5) : '07:00';
+                    document.getElementById('cs-closetime').value = data.closing_time ? data.closing_time.substring(0, 5) : '23:00';
+
+                    document.getElementById('cs-fb').value = data.facebook || 'https://facebook.com/mgmdabha';
+                    document.getElementById('cs-insta').value = data.instagram || 'https://instagram.com/mgmdabha';
+                    document.getElementById('cs-yt').value = data.youtube || 'https://youtube.com/mgmdabha';
+
+                    if (data.restaurant_logo) document.getElementById('preview-logo').src = data.restaurant_logo;
+                    if (data.banner_image) document.getElementById('preview-banner').src = data.banner_image;
+                }
+            } catch (err) {
+                console.error('GET /contact-settings error:', err);
+            }
+        }
+
+        function previewImage(input, previewId) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 5 * 1024 * 1024) {
+                    showToast('Image size exceeds maximum limit of 5 MB.', false);
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById(previewId).src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function updateMapPreview(url) {
+            const iframe = document.getElementById('preview-map');
+            if (url && url.trim() !== '') {
+                iframe.src = url;
+            }
+        }
+
+        async function saveSettings(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-save');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Saving...`;
+
+            const formData = new FormData(e.target);
+
+            try {
+                const res = await fetch('/save-contact-settings', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message || 'Settings Updated Successfully', true);
+                } else {
+                    showToast(data.message || 'Update Failed', false);
+                }
+            } catch (err) {
+                showToast(err.message || 'Update Failed', false);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-save"></i> Save Settings`;
+            }
+        }
+
+        function resetSettingsForm() {
+            if (confirm('Reset contact settings form to last saved values?')) {
+                loadContactSettings();
+            }
+        }
+
+        function showToast(msg, isSuccess = true) {
+            const toast = document.getElementById('cs-toast');
+            const icon = document.getElementById('cs-toast-icon');
+            document.getElementById('cs-toast-msg').textContent = msg;
+            
+            if (isSuccess) {
+                toast.className = 'success';
+                icon.className = 'fas fa-check-circle';
+            } else {
+                toast.className = 'error';
+                icon.className = 'fas fa-exclamation-circle';
+            }
+            
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 3500);
+        }
+    </script>
+</body>
+</html>

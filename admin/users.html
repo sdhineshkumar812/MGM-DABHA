@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Directory - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN PANEL</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item active"><i class="fas fa-users"></i> Customers</a>
+            <a href="reports.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Reports</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Contact Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="user-search" onkeyup="filterUsers()" placeholder="Search registered customers...">
+            </div>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Registered Customer Directory</h1>
+            </div>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Role</th>
+                                <th>Registered Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-tbody">
+                            <tr><td colspan="7" class="text-center" style="padding:30px;">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let allUsers = [];
+
+        document.addEventListener('DOMContentLoaded', fetchUsers);
+
+        async function fetchUsers() {
+            try {
+                const res = await fetch('/api/users');
+                const data = await res.json();
+                if (data.success) {
+                    allUsers = data.users;
+                    renderUsers(allUsers);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderUsers(list) {
+            const tbody = document.getElementById('users-tbody');
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:30px;">No registered users found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = list.map(u => `
+                <tr>
+                    <td><strong>#USR-${u.id}</strong></td>
+                    <td><strong>${u.name}</strong></td>
+                    <td>${u.email}</td>
+                    <td>${u.phone}</td>
+                    <td><span class="status-badge-sm ${u.role === 'admin' ? 'badge-cancelled' : 'badge-delivered'}">${u.role}</span></td>
+                    <td style="font-size:0.8rem;">${new Date(u.created_at || Date.now()).toLocaleDateString()}</td>
+                    <td>
+                        ${u.role !== 'admin' ? `<button onclick="deleteUser(${u.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;" title="Delete Customer"><i class="fas fa-trash-alt"></i></button>` : '<span style="font-size:0.75rem; color:gray;">System Admin</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterUsers() {
+            const q = document.getElementById('user-search').value.toLowerCase();
+            const filtered = allUsers.filter(u => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || u.phone.includes(q));
+            renderUsers(filtered);
+        }
+
+        async function deleteUser(id) {
+            if (confirm('Delete this customer account?')) {
+                try {
+                    await fetch(`/api/users/${id}`, { method: 'DELETE' });
+                    fetchUsers();
+                } catch (err) {
+                    alert('Error deleting user');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

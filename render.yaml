@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mgm-dabha-restaurant
+    env: node
+    region: singapore
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: PORT
+        value: 3000
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        value: mgm_dabha_super_secret_key_2026

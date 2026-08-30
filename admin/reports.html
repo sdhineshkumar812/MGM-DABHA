@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .report-card { background: #FFF; padding: 25px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #E2E8F0; margin-bottom: 25px; }
+        .btn-export { background: #27AE60; color: #FFF; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon" style="background:#d35400;"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN PORTAL</span>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="inventory.html" class="menu-item"><i class="fas fa-boxes"></i> Inventory Stock</a>
+            <a href="reports.html" class="menu-item active"><i class="fas fa-file-invoice-dollar"></i> Reports & Analytics</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Contact Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header" style="display:flex; justify-content:space-between; align-items:center;">
+            <h3><i class="fas fa-chart-pie" style="color:#d35400;"></i> Enterprise Business Reports & Analytics</h3>
+            <button onclick="exportCSV('MGM_DABHA_Revenue_Report')" class="btn-export"><i class="fas fa-file-csv"></i> Export Revenue CSV</button>
+        </header>
+
+        <div class="admin-body">
+            <div class="report-card">
+                <h3 style="color:#8B0000; margin-bottom:15px;"><i class="fas fa-chart-bar" style="color:#d35400;"></i> Revenue Analytics (₹)</h3>
+                <canvas id="reportsRevenueChart" height="220"></canvas>
+            </div>
+
+            <!-- Report Tables -->
+            <div class="report-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h3 style="color:#8B0000; margin:0;"><i class="fas fa-fire" style="color:#d35400;"></i> Top Selling Dishes</h3>
+                    <button onclick="exportCSV('Top_Selling_Foods')" class="btn-export" style="background:#3498DB;"><i class="fas fa-download"></i> Export CSV</button>
+                </div>
+                <table style="width:100%; border-collapse:collapse;" id="report-table">
+                    <thead>
+                        <tr style="background:#F8FAFC; text-align:left;">
+                            <th style="padding:10px;">Dish Name</th>
+                            <th style="padding:10px;">Category</th>
+                            <th style="padding:10px;">Orders Count</th>
+                            <th style="padding:10px;">Total Revenue</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #E2E8F0;">
+                            <td style="padding:10px;"><strong>Chicken Dum Biryani</strong></td>
+                            <td style="padding:10px;">Biryani</td>
+                            <td style="padding:10px;">420 Orders</td>
+                            <td style="padding:10px; color:#27AE60; font-weight:700;">₹100,800.00</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #E2E8F0;">
+                            <td style="padding:10px;"><strong>Tandoori Chicken Half</strong></td>
+                            <td style="padding:10px;">Tandoori</td>
+                            <td style="padding:10px;">280 Orders</td>
+                            <td style="padding:10px; color:#27AE60; font-weight:700;">₹61,600.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const ctx = document.getElementById('reportsRevenueChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+                    datasets: [{
+                        label: 'Monthly Revenue (₹)',
+                        data: [180000, 220000, 250000, 310000, 380000, 420000, 490000, 560000],
+                        borderColor: '#d35400',
+                        backgroundColor: 'rgba(211,84,0,0.1)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        });
+
+        function exportCSV(filename) {
+            let csv = 'Dish Name,Category,Orders Count,Total Revenue\n';
+            csv += 'Chicken Dum Biryani,Biryani,420 Orders,₹100800.00\n';
+            csv += 'Tandoori Chicken Half,Tandoori,280 Orders,₹61600.00\n';
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${filename}.csv`;
+            link.click();
+        }
+    </script>
+</body>
+</html>

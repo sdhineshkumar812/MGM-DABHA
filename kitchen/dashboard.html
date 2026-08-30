@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kitchen Display System (KDS) - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .kds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .kds-card { background: #1E1E1E; color: #FFF; border-radius: 14px; border: 2px solid #333; overflow: hidden; display: flex; flex-direction: column; }
+        .kds-header { background: #e65100; padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .kds-body { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; gap: 10px; }
+        .kds-item { display: flex; justify-content: space-between; font-size: 1rem; border-bottom: 1px dashed #444; padding-bottom: 8px; }
+    </style>
+</head>
+<body style="background:#121212; color:#FFF; min-height:100vh;">
+
+    <!-- KDS Header -->
+    <header style="background:#1B1B1B; padding:15px 0; border-bottom:2px solid #2A2A2A;">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div style="width:40px; height:40px; border-radius:10px; background:var(--secondary); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">
+                    <i class="fas fa-fire-burner"></i>
+                </div>
+                <div>
+                    <h2 style="font-size:1.3rem; font-weight:800; color:var(--accent);">KITCHEN DISPLAY SYSTEM (KDS)</h2>
+                    <span style="font-size:0.78rem; color:#AAA;">MGM DABHA Chef Station</span>
+                </div>
+            </div>
+            <a href="../index.html" class="btn btn-sm btn-secondary" style="border-radius:20px;"><i class="fas fa-store"></i> Exit KDS</a>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top:25px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="font-size:1.2rem; color:var(--accent);"><i class="fas fa-bell"></i> Live Food Preparation Queue</h3>
+            <span style="font-size:0.85rem; color:#888;">Auto Refreshes every 10 seconds</span>
+        </div>
+
+        <div id="kds-cards-container" class="kds-grid">
+            <!-- Dynamically populated -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchKitchenOrders();
+            setInterval(fetchKitchenOrders, 10000);
+        });
+
+        async function fetchKitchenOrders() {
+            const container = document.getElementById('kds-cards-container');
+            try {
+                const res = await fetch('/api/kitchen/orders');
+                const data = await res.json();
+                if (data.success) {
+                    if (data.orders.length === 0) {
+                        container.innerHTML = `<p class="text-center" style="grid-column:1/-1; padding:40px; color:#888;">No active orders in kitchen queue. All caught up!</p>`;
+                    } else {
+                        container.innerHTML = data.orders.map(k => `
+                            <div class="kds-card">
+                                <div class="kds-header">
+                                    <strong>#ORDER-${k.order_id}</strong>
+                                    <span style="background:#FFF; color:#111; font-weight:800; font-size:0.75rem; padding:2px 8px; border-radius:10px;">${k.status}</span>
+                                </div>
+                                <div class="kds-body">
+                                    <div class="kds-item">
+                                        <span>${k.food_name}</span>
+                                        <strong style="color:var(--accent);">x ${k.quantity}</strong>
+                                    </div>
+                                    ${k.notes ? `<p style="font-size:0.8rem; color:#FFB74D;"><i class="fas fa-note-sticky"></i> Note: ${k.notes}</p>` : ''}
+                                    <div style="font-size:0.75rem; color:#888; margin-top:auto;"><i class="fas fa-clock"></i> ${new Date(k.created_at).toLocaleTimeString()}</div>
+                                </div>
+                                <div style="padding:10px; background:#181818; display:flex; gap:8px;">
+                                    <button onclick="updateKdsStatus(${k.id}, 'Preparing')" class="btn btn-sm btn-accent" style="flex-grow:1; font-size:0.78rem;">Preparing</button>
+                                    <button onclick="updateKdsStatus(${k.id}, 'Ready')" class="btn btn-sm btn-primary" style="flex-grow:1; font-size:0.78rem; background:#2ecc71;">Ready</button>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (err) {}
+        }
+
+        async function updateKdsStatus(id, status) {
+            try {
+                const res = await fetch(`/api/kitchen/order-status/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    fetchKitchenOrders();
+                }
+            } catch (err) {}
+        }
+    </script>
+</body>
+</html>

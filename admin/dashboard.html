@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard V13.0 Real Startup Edition - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .admin-notif-dropdown { display: none; position: absolute; right: 50px; top: 65px; width: 320px; background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 10px 30px rgba(0,0,0,0.25); z-index: 1000; padding: 15px; }
+        .admin-notif-dropdown.active { display: block; }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN V13.0</span>
+            </div>
+        </div>
+
+        <div class="sidebar-menu">
+            <div class="menu-category">Main</div>
+            <a href="dashboard.html" class="menu-item active"><i class="fas fa-chart-line"></i> Dashboard</a>
+            
+            <div class="menu-category">Portals & Quick Roles</div>
+            <a href="banners.html" class="menu-item" style="color:#9b59b6;"><i class="fas fa-images"></i> Banner Manager</a>
+            <a href="../owner/dashboard.html" class="menu-item" style="color:var(--admin-accent);"><i class="fas fa-crown"></i> Owner Dashboard</a>
+            <a href="../kitchen/dashboard.html" class="menu-item" style="color:#ff9800;"><i class="fas fa-fire-burner"></i> Kitchen KDS</a>
+            <a href="../delivery/dashboard.html" class="menu-item" style="color:#2ecc71;"><i class="fas fa-motorcycle"></i> Delivery Portal</a>
+            <a href="coupons.html" class="menu-item"><i class="fas fa-ticket-alt"></i> Coupons Manager</a>
+
+            <div class="menu-category">Management</div>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="inventory.html" class="menu-item"><i class="fas fa-boxes"></i> Inventory Stock</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            
+            <div class="menu-category">Analytics & Settings</div>
+            <a href="reports.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Reports</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+            <a href="../index.html" class="menu-item"><i class="fas fa-store"></i> Customer Site</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search orders, AI analytics...">
+            </div>
+            <div class="header-profile" style="position:relative;">
+                <!-- DB Backup Download Button -->
+                <a href="/api/admin/backup/export" download class="btn" style="background:#27ae60; color:#FFF; padding:6px 14px; border-radius:20px; font-size:0.8rem; font-weight:700;"><i class="fas fa-download"></i> Export DB Backup</a>
+
+                <!-- Notification Bell -->
+                <button onclick="toggleAdminNotif()" class="icon-btn" style="position:relative;" title="Live Notifications">
+                    <i class="fas fa-bell"></i>
+                    <span id="admin-notif-badge" class="badge-count" style="display:none; background:#e74c3c;">0</span>
+                </button>
+
+                <div id="admin-notif-dropdown" class="admin-notif-dropdown">
+                    <h4 style="font-size:0.95rem; border-bottom:1px solid var(--border-color); padding-bottom:8px; margin-bottom:10px;"><i class="fas fa-bolt" style="color:var(--admin-secondary);"></i> Real-Time Events</h4>
+                    <div id="admin-notif-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+                </div>
+
+                <button class="icon-btn theme-toggle" onclick="document.body.classList.toggle('dark-mode');"><i class="fas fa-moon"></i></button>
+                <div class="admin-user">
+                    <div class="admin-avatar">A</div>
+                    <div>
+                        <strong style="font-size:0.9rem;">Administrator</strong>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">admin@mgmdabha.com</div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Executive AI & V13.0 Multi-Role Dashboard</h1>
+                <span style="font-size:0.88rem; color:var(--text-muted);"><i class="fas fa-server"></i> Real Startup Release</span>
+            </div>
+
+            <!-- Role Portals Shortcut Buttons -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; margin-bottom:25px;">
+                <a href="banners.html" style="background:linear-gradient(135deg, #8E44AD, #9B59B6); color:#FFF; padding:15px; border-radius:12px; font-weight:700; text-align:center; box-shadow:var(--shadow);">
+                    <i class="fas fa-images" style="font-size:1.5rem; display:block; margin-bottom:5px;"></i> Banner Manager
+                </a>
+                <a href="../owner/dashboard.html" style="background:linear-gradient(135deg, #FF9800, #F57C00); color:#FFF; padding:15px; border-radius:12px; font-weight:700; text-align:center; box-shadow:var(--shadow);">
+                    <i class="fas fa-crown" style="font-size:1.5rem; display:block; margin-bottom:5px;"></i> Owner Dashboard
+                </a>
+                <a href="../kitchen/dashboard.html" style="background:linear-gradient(135deg, #E65100, #EF6C00); color:#FFF; padding:15px; border-radius:12px; font-weight:700; text-align:center; box-shadow:var(--shadow);">
+                    <i class="fas fa-fire-burner" style="font-size:1.5rem; display:block; margin-bottom:5px;"></i> Kitchen KDS Portal
+                </a>
+                <a href="../delivery/dashboard.html" style="background:linear-gradient(135deg, #2E7D32, #388E3C); color:#FFF; padding:15px; border-radius:12px; font-weight:700; text-align:center; box-shadow:var(--shadow);">
+                    <i class="fas fa-motorcycle" style="font-size:1.5rem; display:block; margin-bottom:5px;"></i> Delivery Agent Portal
+                </a>
+            </div>
+
+            <!-- Stat Metric Cards -->
+            <div class="stat-cards-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple"><i class="fas fa-utensils"></i></div>
+                    <div class="stat-details">
+                        <h3 id="stat-foods">0</h3>
+                        <p>Total Food Items</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-orange"><i class="fas fa-shopping-bag"></i></div>
+                    <div class="stat-details">
+                        <h3 id="stat-orders">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fas fa-calendar-alt"></i></div>
+                    <div class="stat-details">
+                        <h3 id="stat-reservations">0</h3>
+                        <p>Reservations</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-green"><i class="fas fa-rupee-sign"></i></div>
+                    <div class="stat-details">
+                        <h3 id="stat-revenue">₹0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-chart-line" style="color:var(--admin-secondary);"></i> Sales Revenue & AI Forecast</h3>
+                    </div>
+                    <canvas id="salesChart" height="220"></canvas>
+                </div>
+
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h3><i class="fas fa-smile" style="color:var(--admin-secondary);"></i> Customer Sentiment Analysis</h3>
+                    </div>
+                    <canvas id="sentimentChart" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadDashboardSummary();
+            fetchAdminLiveNotifications();
+            initCharts();
+        });
+
+        function toggleAdminNotif() {
+            document.getElementById('admin-notif-dropdown').classList.toggle('active');
+        }
+
+        async function fetchAdminLiveNotifications() {
+            try {
+                const res = await fetch('/api/admin/live-notifications');
+                const data = await res.json();
+                if (data.success) {
+                    const a = data.alerts;
+                    const totalAlerts = a.pendingOrdersCount + a.lowStockCount + a.pendingReservationsCount;
+                    const badge = document.getElementById('admin-notif-badge');
+                    if (totalAlerts > 0) {
+                        badge.textContent = totalAlerts;
+                        badge.style.display = 'flex';
+                    }
+
+                    const list = document.getElementById('admin-notif-list');
+                    list.innerHTML = `
+                        <div style="font-size:0.85rem; padding:6px; background:rgba(231,76,60,0.1); border-left:3px solid #e74c3c; border-radius:4px;">
+                            <strong>${a.pendingOrdersCount} Pending Orders</strong> requiring kitchen dispatch.
+                        </div>
+                        <div style="font-size:0.85rem; padding:6px; background:rgba(241,196,15,0.1); border-left:3px solid #f1c40f; border-radius:4px;">
+                            <strong>${a.lowStockCount} Low Stock Items</strong> below 10 units.
+                        </div>
+                        <div style="font-size:0.85rem; padding:6px; background:rgba(52,152,219,0.1); border-left:3px solid #3498db; border-radius:4px;">
+                            <strong>${a.pendingReservationsCount} Table Reservations</strong> pending approval.
+                        </div>
+                    `;
+                }
+            } catch (err) {}
+        }
+
+        async function loadDashboardSummary() {
+            try {
+                const res = await fetch('/api/dashboard-summary');
+                const data = await res.json();
+                if (data.success) {
+                    const s = data.summary;
+                    document.getElementById('stat-foods').textContent = s.totalFoods;
+                    document.getElementById('stat-orders').textContent = s.totalOrders;
+                    document.getElementById('stat-reservations').textContent = s.totalReservations;
+                    document.getElementById('stat-revenue').textContent = `₹${s.todayRevenue.toFixed(2)}`;
+                }
+            } catch (e) {}
+        }
+
+        function initCharts() {
+            const ctx1 = document.getElementById('salesChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [
+                        { label: 'Actual Sales (₹)', data: [4200, 5800, 4900, 7200, 9500, 14200, 16800], borderColor: '#FF5722', backgroundColor: 'rgba(255, 87, 34, 0.1)', fill: true },
+                        { label: 'AI Forecast (₹)', data: [4500, 6000, 5200, 7800, 10200, 15000, 18000], borderColor: '#3498DB', borderDash: [5, 5], fill: false }
+                    ]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctx2 = document.getElementById('sentimentChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Positive Reviews', 'Neutral Reviews', 'Critical Reviews'],
+                    datasets: [{
+                        data: [85, 10, 5],
+                        backgroundColor: ['#2ECC71', '#F1C40F', '#E74C3C']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+    </script>
+</body>
+</html>

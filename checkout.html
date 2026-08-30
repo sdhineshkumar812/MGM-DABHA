@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - MGM DABHA Dharmapuri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        .tip-btn { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border-color); background: var(--card-bg); font-weight: 700; cursor: pointer; transition: var(--transition); }
+        .tip-btn.active, .tip-btn:hover { background: var(--secondary); color: #FFF; border-color: var(--secondary); }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1 class="dynamic-restaurant-name">MGM DABHA</h1>
+                    <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine Family Restaurant</span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="cart.html">Cart</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container section-padding">
+        <h1 class="section-title">Checkout Order</h1>
+        <p class="section-subtitle">Express Home Delivery within 25–35 Minutes in Dharmapuri</p>
+
+        <div style="display:grid; grid-template-columns: 1fr 340px; gap:30px;">
+            <!-- Customer Form -->
+            <div class="glass-card" style="padding:30px; border-radius:16px;">
+                <h3 style="color:var(--primary); margin-bottom:20px;"><i class="fas fa-truck"></i> Delivery Information</h3>
+                <form id="checkout-form" onsubmit="handlePlaceOrder(event)">
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:15px;">
+                        <div>
+                            <label style="font-weight:600; font-size:0.88rem;">Customer Name</label>
+                            <input type="text" id="cust-name" class="form-control" placeholder="Full Name" required>
+                        </div>
+                        <div>
+                            <label style="font-weight:600; font-size:0.88rem;">Phone Number</label>
+                            <input type="tel" id="cust-phone" class="form-control" placeholder="+91 9345841117" required>
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom:15px;">
+                        <label style="font-weight:600; font-size:0.88rem;">Delivery Address</label>
+                        <textarea id="delivery-address" class="form-control" rows="3" placeholder="Tomato Market Opposite MGM DABHA, Palacode, Dharmapuri, Tamil Nadu – 636806" required></textarea>
+                    </div>
+
+                    <!-- Delivery Partner Tip -->
+                    <div style="margin-bottom:20px;">
+                        <label style="font-weight:600; font-size:0.88rem; display:block; margin-bottom:8px;">Tip for Delivery Partner</label>
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" class="tip-btn active" onclick="selectTip(0, this)">No Tip</button>
+                            <button type="button" class="tip-btn" onclick="selectTip(20, this)">₹20</button>
+                            <button type="button" class="tip-btn" onclick="selectTip(30, this)">₹30</button>
+                            <button type="button" class="tip-btn" onclick="selectTip(50, this)">₹50</button>
+                        </div>
+                    </div>
+
+                    <h3 style="color:var(--primary); margin:25px 0 15px;"><i class="fas fa-wallet"></i> Payment Method</h3>
+                    <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:25px;">
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                            <input type="radio" name="payment_method" value="Cash on Delivery" checked> Cash on Delivery (COD)
+                        </label>
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                            <input type="radio" name="payment_method" value="Google Pay / PhonePe UPI"> Google Pay / PhonePe / Paytm UPI
+                        </label>
+                    </div>
+
+                    <button type="submit" id="btn-place-order" class="btn btn-primary" style="width:100%; font-size:1.1rem;"><i class="fas fa-check-circle"></i> Place Order Now</button>
+                </form>
+            </div>
+
+            <!-- Order Summary Card -->
+            <div class="glass-card" style="padding:25px; border-radius:16px; height:fit-content;">
+                <h3 style="color:var(--primary); margin-bottom:15px;">Order Summary</h3>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>Delivery Charge:</span>
+                    <strong>₹40.00</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>GST Tax (5%):</span>
+                    <strong>Included</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                    <span>Delivery Tip:</span>
+                    <strong id="tip-amount-val">₹0.00</strong>
+                </div>
+                <div style="border-top:1px solid var(--border-color); padding-top:10px; margin-top:10px; display:flex; justify-content:space-between; font-size:1.2rem; color:var(--primary); font-weight:800;">
+                    <span>Total Amount:</span>
+                    <span id="checkout-total-val">₹280.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA – All Rights Reserved. Made with ❤️ in Dharmapuri, Tamil Nadu.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        let currentTip = 0;
+
+        function selectTip(amount, btn) {
+            document.querySelectorAll('.tip-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTip = amount;
+            document.getElementById('tip-amount-val').textContent = `₹${amount}.00`;
+            document.getElementById('checkout-total-val').textContent = `₹${280 + amount}.00`;
+        }
+
+        async function handlePlaceOrder(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-place-order');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Processing Order...`;
+
+            const name = document.getElementById('cust-name').value;
+            const phone = document.getElementById('cust-phone').value;
+            const address = document.getElementById('delivery-address').value;
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+
+            // Trigger Confetti Animation
+            if (typeof confetti === 'function') {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            }
+
+            setTimeout(() => {
+                alert(`Order Placed Successfully for ${name}! Redirecting to Live Order Tracking...`);
+                window.location.href = 'track-order.html';
+            }, 1200);
+        }
+    </script>
+</body>
+</html>

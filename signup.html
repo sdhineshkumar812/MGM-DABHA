@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Signup - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1>MGM DABHA</h1>
+                    <span>Authentic Taste | உண்மையான சுவை</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <section class="section-padding" style="display:flex; align-items:center; min-height:80vh;">
+        <div class="container" style="max-width:480px;">
+            <div style="background:var(--card-bg); padding:40px; border-radius:var(--radius); border:1px solid var(--border-color); box-shadow:var(--shadow);">
+                <div class="text-center" style="margin-bottom:25px;">
+                    <h2 style="font-size:1.8rem; font-weight:700; color:var(--primary);">Create Account</h2>
+                    <p style="font-size:0.9rem; color:var(--text-muted);">Join MGM DABHA family for quick ordering & rewards</p>
+                </div>
+
+                <form onsubmit="handleSignup(event)">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="signup-name" class="form-control" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="signup-email" class="form-control" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="signup-phone" class="form-control" placeholder="10-digit phone number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="signup-password" class="form-control" placeholder="Create password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%; margin-top:10px;"><i class="fas fa-user-plus"></i> Sign Up Now</button>
+                </form>
+
+                <div class="text-center" style="margin-top:20px; font-size:0.9rem;">
+                    Already have an account? <a href="login.html" style="color:var(--secondary); font-weight:600;">Login here</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/script.js"></script>
+    <script>
+        async function handleSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const phone = document.getElementById('signup-phone').value;
+            const password = document.getElementById('signup-password').value;
+
+            try {
+                const res = await fetch('/api/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, phone, password })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast('Registration successful! Redirecting to login...', 'success');
+                    setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+                } else {
+                    showToast(data.message || 'Signup failed', 'error');
+                }
+            } catch (err) {
+                showToast('Server connection error', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - MGM DABHA Dharmapuri</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1 class="dynamic-restaurant-name">MGM DABHA</h1>
+                    <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine Family Restaurant</span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="reservation.html">Reservation</a>
+                <a href="contact.html" class="active">Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="cart.html" class="icon-btn" title="View Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="badge-count cart-count-badge">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Banner -->
+    <div style="background: linear-gradient(135deg, var(--primary), #4a0000); color:#FFF; padding: 60px 0; text-align:center;">
+        <div class="container">
+            <h1 style="font-size:2.5rem; font-weight:800; margin-bottom:10px;">Contact Us</h1>
+            <p style="font-size:1.1rem; color:rgba(255,255,255,0.85);">We'd love to serve you! Get in touch or visit us in Palacode, Dharmapuri.</p>
+        </div>
+    </div>
+
+    <!-- Contact Info Section -->
+    <section class="section-padding">
+        <div class="container">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:30px;">
+                <div class="glass-card" style="padding:30px; border-radius:16px;">
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+                        <i class="fas fa-map-marker-alt" style="font-size:2rem; color:var(--secondary);"></i>
+                        <div>
+                            <h3 style="font-size:1.1rem; color:var(--primary);">Restaurant Address</h3>
+                            <p class="dynamic-address" style="color:var(--text-muted); font-size:0.92rem;">Tomato Market Opposite MGM DABHA, Near Tomato Market, Palacode, Dharmapuri, Tamil Nadu – 636806, India.</p>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+                        <i class="fas fa-phone-alt" style="font-size:2rem; color:var(--secondary);"></i>
+                        <div>
+                            <h3 style="font-size:1.1rem; color:var(--primary);">Phone & WhatsApp</h3>
+                            <p class="dynamic-phone" style="color:var(--text-muted); font-size:0.92rem;">+91 9345841117</p>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+                        <i class="fas fa-envelope" style="font-size:2rem; color:var(--secondary);"></i>
+                        <div>
+                            <h3 style="font-size:1.1rem; color:var(--primary);">Email Address</h3>
+                            <p class="dynamic-email" style="color:var(--text-muted); font-size:0.92rem;">sdhineshkumar7576@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:20px;">
+                        <a href="tel:+919345841117" class="btn btn-primary btn-sm"><i class="fas fa-phone-alt"></i> Call Now</a>
+                        <a href="https://wa.me/919345841117" target="_blank" class="btn btn-secondary btn-sm dynamic-whatsapp-btn" style="background:#25D366; color:#FFF; border:none;"><i class="fab fa-whatsapp"></i> WhatsApp Order</a>
+                        <a href="https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806" target="_blank" class="btn btn-accent btn-sm"><i class="fas fa-directions"></i> Get Directions</a>
+                    </div>
+                </div>
+
+                <!-- Embedded Google Map -->
+                <div style="border-radius:16px; overflow:hidden; border:1px solid var(--border-color); box-shadow:var(--shadow);">
+                    <iframe id="dyn-google-map" src="https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806&output=embed" width="100%" height="100%" style="border:0; min-height:350px;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA – All Rights Reserved. Made with ❤️ in Dharmapuri, Tamil Nadu.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage Banner Manager - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN V13.0</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="banners.html" class="menu-item active"><i class="fas fa-images"></i> Banner Manager</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="inventory.html" class="menu-item"><i class="fas fa-boxes"></i> Inventory Stock</a>
+            <a href="coupons.html" class="menu-item"><i class="fas fa-ticket-alt"></i> Coupons</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h3>Homepage Slideshow Banner Manager</h3>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Homepage Banners</h1>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px;">
+                <!-- Upload New Banner Card -->
+                <div class="table-card" style="padding:25px;">
+                    <h3 style="font-size:1.1rem; color:var(--admin-primary); margin-bottom:15px;"><i class="fas fa-upload"></i> Upload New Banner</h3>
+                    <form onsubmit="handleUploadBanner(event)" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label>Banner Title</label>
+                            <input type="text" id="banner-title" name="title" placeholder="e.g. Weekend Biryani Feast" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Banner Image</label>
+                            <input type="file" name="banner_file" accept="image/*" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; background:var(--admin-secondary); color:#FFF; border:none; padding:12px; border-radius:8px; cursor:pointer; font-weight:700;"><i class="fas fa-save"></i> Upload Banner</button>
+                    </form>
+                </div>
+
+                <!-- Active Banners List -->
+                <div class="table-card" style="padding:25px;">
+                    <h3 style="font-size:1.1rem; color:var(--admin-primary); margin-bottom:15px;"><i class="fas fa-layer-group"></i> Active Homepage Banners</h3>
+                    <div id="admin-banners-list" style="display:flex; flex-direction:column; gap:15px;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchBanners);
+
+        async function fetchBanners() {
+            const container = document.getElementById('admin-banners-list');
+            try {
+                const res = await fetch('/api/banners');
+                const data = await res.json();
+                if (data.success) {
+                    if (data.banners.length === 0) {
+                        container.innerHTML = '<p style="color:gray;">No hero banners uploaded.</p>';
+                    } else {
+                        container.innerHTML = data.banners.map(b => `
+                            <div style="background:var(--bg-main); padding:15px; border-radius:10px; border:1px solid var(--border-color); display:flex; align-items:center; gap:15px;">
+                                <img src="${b.image_url}" style="width:100px; height:60px; object-fit:cover; border-radius:6px;">
+                                <div style="flex-grow:1;">
+                                    <strong style="font-size:1rem; color:var(--admin-primary);">${b.title}</strong>
+                                    <div style="font-size:0.8rem; color:${b.is_active ? '#2ecc71' : '#e74c3c'}; font-weight:700;">${b.is_active ? '🟢 Active' : '🔴 Inactive'}</div>
+                                </div>
+                                <button onclick="deleteBanner(${b.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-size:1.1rem;"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (err) {}
+        }
+
+        async function handleUploadBanner(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            try {
+                const res = await fetch('/api/banners', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Banner uploaded successfully!');
+                    e.target.reset();
+                    fetchBanners();
+                }
+            } catch (err) {
+                alert('Failed to upload banner.');
+            }
+        }
+
+        async function deleteBanner(id) {
+            if (confirm('Delete this banner from homepage slideshow?')) {
+                try {
+                    await fetch(`/api/banners/${id}`, { method: 'DELETE' });
+                    fetchBanners();
+                } catch (err) {}
+            }
+        }
+    </script>
+</body>
+</html>

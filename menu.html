@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Food Menu - MGM DABHA | Authentic South Indian</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1>MGM DABHA</h1>
+                    <span>Authentic Taste | உண்மையான சுவை</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html" class="active">Menu</a>
+                <a href="blog.html">Blog & Events</a>
+                <a href="faq.html">FAQ</a>
+                <a href="reservation.html">Reservation</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn theme-toggle"><i class="fas fa-moon"></i></button>
+                <a href="cart.html" class="icon-btn"><i class="fas fa-shopping-bag"></i><span class="badge-count cart-count-badge">0</span></a>
+                <div id="nav-auth-container"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Banner -->
+    <div style="background: linear-gradient(135deg, var(--primary), #4a0000); color:#FFF; padding:60px 0 40px; text-align:center;">
+        <div class="container">
+            <h1 style="font-size:2.5rem; font-weight:800; margin-bottom:10px;">Our Food Menu</h1>
+            <p style="font-size:1.1rem; color:rgba(255,255,255,0.85); max-width:600px; margin:0 auto;">Explore handcrafted South Indian Dum Biryanis, Tandoori, Chinese delicacies, and fresh juices.</p>
+            
+            <div class="search-container-box" style="max-width:550px; margin:25px auto 0;">
+                <input type="text" id="search-food-input" placeholder="Search dish by name or category..." class="form-control" style="padding:14px 45px; border-radius:30px; font-size:1rem; box-shadow:0 6px 20px rgba(0,0,0,0.3);">
+                <i class="fas fa-search" style="position:absolute; left:18px; top:50%; transform:translateY(-50%); color:gray;"></i>
+                <button class="mic-btn" title="Voice Search"><i class="fas fa-microphone"></i></button>
+                <div id="search-suggestions" class="search-suggestions"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Section -->
+    <section class="section-padding">
+        <div class="container">
+            <!-- Filter Bar -->
+            <div class="filter-bar" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap; margin-bottom:40px;">
+                <button class="filter-btn active" data-category="All" onclick="filterCategory('All', this)">All Items</button>
+                <button class="filter-btn" data-category="Non Veg" onclick="filterCategory('Non Veg', this)">🍗 Non-Veg</button>
+                <button class="filter-btn" data-category="Veg" onclick="filterCategory('Veg', this)">🥬 Veg Special</button>
+                <button class="filter-btn" data-category="Tandoori" onclick="filterCategory('Tandoori', this)">🔥 Tandoori</button>
+                <button class="filter-btn" data-category="Chinese" onclick="filterCategory('Chinese', this)">🍜 Chinese</button>
+                <button class="filter-btn" data-category="Juices" onclick="filterCategory('Juices', this)">🍹 Fresh Juices</button>
+                <button class="filter-btn" data-category="Dessert" onclick="filterCategory('Dessert', this)">🍨 Desserts</button>
+            </div>
+
+            <!-- Food Grid Container -->
+            <div id="food-grid" class="food-grid"></div>
+        </div>
+    </section>
+
+    <!-- Food Option Customizer Modal -->
+    <div id="food-customizer-modal" class="modal">
+        <div class="modal-content" style="max-width:450px;">
+            <span class="modal-close" onclick="closeCustomizerModal()">&times;</span>
+            <h3 id="cust-food-name" style="font-size:1.4rem; color:var(--primary); margin-bottom:5px;">Customize Dish</h3>
+            <p id="cust-food-price" style="font-size:0.9rem; color:var(--secondary); font-weight:700; margin-bottom:15px;"></p>
+            
+            <div style="display:flex; flex-direction:column; gap:12px; text-align:left;">
+                <label style="font-weight:700; font-size:0.9rem;">Select Add-ons:</label>
+                <label style="display:flex; align-items:center; gap:10px; font-size:0.9rem; cursor:pointer;">
+                    <input type="checkbox" id="chk-salna" value="Extra Salna"> Extra Hot Spicy Salna / Gravy (+₹20)
+                </label>
+                <label style="display:flex; align-items:center; gap:10px; font-size:0.9rem; cursor:pointer;">
+                    <input type="checkbox" id="chk-cheese" value="Extra Cheese"> Extra Melted Cheese (+₹30)
+                </label>
+
+                <label style="font-weight:700; font-size:0.9rem; margin-top:10px;">Select Spice Preference:</label>
+                <select id="sel-spice" class="form-control">
+                    <option value="Mild 🌶️">Mild 🌶️ (Less Spicy)</option>
+                    <option value="Medium 🌶️🌶️" selected>Medium 🌶️🌶️ (Standard)</option>
+                    <option value="Hot & Spicy 🌶️🌶️🌶️">Hot & Extra Spicy 🌶️🌶️🌶️</option>
+                </select>
+
+                <button onclick="addCustomizedToCart()" class="btn btn-primary" style="margin-top:15px; width:100%; border-radius:25px;"><i class="fas fa-shopping-bag"></i> Add Customized Dish to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Bottom Navigation Bar -->
+    <div class="mobile-bottom-nav">
+        <a href="index.html" class="mob-nav-item"><i class="fas fa-home"></i> <span>Home</span></a>
+        <a href="menu.html" class="mob-nav-item active"><i class="fas fa-utensils"></i> <span>Menu</span></a>
+        <a href="cart.html" class="mob-nav-item"><i class="fas fa-shopping-bag"></i> <span>Cart</span></a>
+        <a href="profile.html" class="mob-nav-item"><i class="fas fa-clock-rotate-left"></i> <span>Orders</span></a>
+        <a href="profile.html" class="mob-nav-item"><i class="fas fa-user"></i> <span>Profile</span></a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA Enterprise Release. Authentic Taste | உண்மையான சுவை.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+[2026-08-30T09:17:32.668Z] [WARNING] MySQL unavailable, fallback to embedded SQLite engine.
+[2026-08-30T09:17:32.676Z] [INFO] Server started on port 3000
+[2026-08-30T10:07:29.245Z] [INFO] Delivery rider logged in: Ramesh Kumar

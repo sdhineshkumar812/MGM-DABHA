@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Orders - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN PANEL</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="orders.html" class="menu-item active"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="reports.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Reports</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Contact Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="order-search" onkeyup="filterOrders()" placeholder="Search by customer name or phone...">
+            </div>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Live Orders Monitor</h1>
+            </div>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer Info</th>
+                                <th>Delivery Address</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr><td colspan="8" class="text-center" style="padding:30px;">Loading live orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let allOrders = [];
+
+        document.addEventListener('DOMContentLoaded', fetchOrders);
+
+        async function fetchOrders() {
+            try {
+                const res = await fetch('/api/orders');
+                const data = await res.json();
+                if (data.success) {
+                    allOrders = data.orders;
+                    renderOrders(allOrders);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderOrders(orders) {
+            const tbody = document.getElementById('orders-tbody');
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="text-center" style="padding:30px;">No orders found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td><strong>#MGM-${o.id}</strong></td>
+                    <td>
+                        <strong>${o.customer_name}</strong>
+                        <div style="font-size:0.78rem; color:gray;"><i class="fas fa-phone"></i> ${o.customer_phone}</div>
+                    </td>
+                    <td style="max-width:200px; font-size:0.85rem;">${o.delivery_address}</td>
+                    <td><strong style="color:var(--admin-secondary);">₹${o.total_amount}</strong></td>
+                    <td><span style="font-size:0.8rem; padding:3px 8px; border-radius:10px; background:rgba(0,0,0,0.05);">${o.payment_method}</span></td>
+                    <td>
+                        <select onchange="updateOrderStatus(${o.id}, this.value)" class="status-select">
+                            <option value="Pending" ${o.order_status === 'Pending' ? 'selected' : ''}>Pending</option>
+                            <option value="Preparing" ${o.order_status === 'Preparing' ? 'selected' : ''}>Preparing</option>
+                            <option value="Ready" ${o.order_status === 'Ready' ? 'selected' : ''}>Ready</option>
+                            <option value="Delivered" ${o.order_status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+                            <option value="Cancelled" ${o.order_status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        </select>
+                    </td>
+                    <td style="font-size:0.8rem;">${new Date(o.order_date).toLocaleString()}</td>
+                    <td style="display:flex; gap:10px;">
+                        <a href="order-details.html?id=${o.id}" class="btn btn-sm" style="background:#3498db; color:#FFF; padding:4px 10px; border-radius:6px; font-size:0.8rem; text-decoration:none;" title="Print Invoice"><i class="fas fa-file-invoice"></i> View</a>
+                        <button onclick="deleteOrder(${o.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;" title="Delete Order"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterOrders() {
+            const q = document.getElementById('order-search').value.toLowerCase();
+            const filtered = allOrders.filter(o => o.customer_name.toLowerCase().includes(q) || o.customer_phone.includes(q));
+            renderOrders(filtered);
+        }
+
+        async function updateOrderStatus(id, newStatus) {
+            try {
+                const res = await fetch(`/api/update-order-status/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_status: newStatus })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert(`Order #${id} status updated to ${newStatus}`);
+                }
+            } catch (err) {
+                alert('Failed to update status');
+            }
+        }
+
+        async function deleteOrder(id) {
+            if (confirm('Are you sure you want to delete this order?')) {
+                try {
+                    const res = await fetch(`/api/delete-order/${id}`, { method: 'DELETE' });
+                    const data = await res.json();
+                    if (data.success) {
+                        fetchOrders();
+                    }
+                } catch (err) {
+                    alert('Failed to delete order');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

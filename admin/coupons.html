@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coupon Code Manager - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN ENTERPRISE</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="inventory.html" class="menu-item"><i class="fas fa-boxes"></i> Inventory Stock</a>
+            <a href="coupons.html" class="menu-item active"><i class="fas fa-ticket-alt"></i> Coupons</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="reports.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Reports</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h3>Coupon Code & Discount Manager</h3>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Coupons Manager</h1>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px;">
+                <!-- Add Coupon Form -->
+                <div class="table-card" style="padding:25px;">
+                    <h3 style="font-size:1.1rem; color:var(--admin-primary); margin-bottom:15px;"><i class="fas fa-plus"></i> Add New Coupon Code</h3>
+                    <form onsubmit="handleAddCoupon(event)">
+                        <div class="form-group">
+                            <label>Coupon Code</label>
+                            <input type="text" id="coup-code" placeholder="e.g. MGM30" class="form-control" style="text-transform:uppercase;" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Discount Type</label>
+                            <select id="coup-type" class="form-control">
+                                <option value="percent">Percentage (%)</option>
+                                <option value="fixed">Fixed Amount (₹)</option>
+                                <option value="free_delivery">Free Delivery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Discount Value</label>
+                            <input type="number" id="coup-val" placeholder="e.g. 20 for 20%" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Min Order Amount (₹)</label>
+                            <input type="number" id="coup-min" placeholder="e.g. 200" class="form-control" value="0" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; background:var(--admin-secondary); color:#FFF; border:none; padding:10px; border-radius:8px; cursor:pointer;"><i class="fas fa-save"></i> Save Coupon</button>
+                    </form>
+                </div>
+
+                <!-- Active Coupons List -->
+                <div class="table-card" style="padding:25px;">
+                    <h3 style="font-size:1.1rem; color:var(--admin-primary); margin-bottom:15px;"><i class="fas fa-tags"></i> Active Coupon Codes</h3>
+                    <div id="admin-coupons-list" style="display:flex; flex-direction:column; gap:12px;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchCoupons);
+
+        async function fetchCoupons() {
+            const listContainer = document.getElementById('admin-coupons-list');
+            try {
+                const res = await fetch('/api/admin/coupons');
+                const data = await res.json();
+                if (data.success) {
+                    if (data.coupons.length === 0) {
+                        listContainer.innerHTML = '<p style="color:gray;">No coupons found.</p>';
+                    } else {
+                        listContainer.innerHTML = data.coupons.map(c => `
+                            <div style="background:var(--bg-main); padding:12px 18px; border-radius:10px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                                <div>
+                                    <strong style="color:var(--admin-secondary); font-size:1.1rem;">${c.code}</strong>
+                                    <div style="font-size:0.8rem; color:gray;">${c.discount_type === 'percent' ? c.discount_value + '% OFF' : '₹' + c.discount_value + ' OFF'} (Min Order: ₹${c.min_order_amount})</div>
+                                </div>
+                                <button onclick="deleteCoupon(${c.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer;"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        `).join('');
+                    }
+                }
+            } catch (err) {}
+        }
+
+        async function handleAddCoupon(e) {
+            e.preventDefault();
+            const code = document.getElementById('coup-code').value;
+            const discount_type = document.getElementById('coup-type').value;
+            const discount_value = document.getElementById('coup-val').value;
+            const min_order_amount = document.getElementById('coup-min').value;
+
+            try {
+                const res = await fetch('/api/admin/coupons', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, discount_type, discount_value, min_order_amount })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Coupon created!');
+                    e.target.reset();
+                    fetchCoupons();
+                }
+            } catch (err) {}
+        }
+
+        async function deleteCoupon(id) {
+            if (confirm('Delete coupon code?')) {
+                try {
+                    await fetch(`/api/admin/coupons/${id}`, { method: 'DELETE' });
+                    fetchCoupons();
+                } catch (err) {}
+            }
+        }
+    </script>
+</body>
+</html>

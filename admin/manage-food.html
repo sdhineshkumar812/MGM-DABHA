@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Foods - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN PANEL</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item active"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="reports.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Reports</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Contact Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div class="header-search">
+                <i class="fas fa-search"></i>
+                <input type="text" id="food-search-input" onkeyup="filterFoodTable()" placeholder="Search food items...">
+            </div>
+            <a href="add-food.html" class="btn" style="background:var(--admin-secondary); color:#FFF; padding:8px 20px; border-radius:20px; text-decoration:none;"><i class="fas fa-plus"></i> Add New Dish</a>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Manage Menu Catalog</h1>
+            </div>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Discount</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="manage-food-tbody">
+                            <tr><td colspan="7" class="text-center" style="padding:30px;">Loading menu items...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let allFoods = [];
+
+        document.addEventListener('DOMContentLoaded', fetchFoods);
+
+        async function fetchFoods() {
+            try {
+                const res = await fetch('/api/menu');
+                const data = await res.json();
+                if (data.success) {
+                    allFoods = data.menu;
+                    renderTable(allFoods);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderTable(foods) {
+            const tbody = document.getElementById('manage-food-tbody');
+            if (foods.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center" style="padding:30px;">No food items found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = foods.map(item => `
+                <tr>
+                    <td style="display:flex; align-items:center; gap:12px;">
+                        <img src="${item.image_url}" alt="${item.name}" style="width:45px; height:45px; border-radius:8px; object-fit:cover;">
+                        <div>
+                            <strong>${item.name}</strong>
+                            <div style="font-size:0.75rem; color:gray;">ID: #${item.id}</div>
+                        </div>
+                    </td>
+                    <td>${item.category}</td>
+                    <td><strong>₹${item.price}</strong></td>
+                    <td>${item.discount_percent}%</td>
+                    <td>${item.is_veg ? '<span style="color:#2ecc71; font-weight:600;">🟢 Veg</span>' : '<span style="color:#e74c3c; font-weight:600;">🔴 Non-Veg</span>'}</td>
+                    <td><span class="status-badge-sm badge-delivered">${item.status || 'available'}</span></td>
+                    <td>
+                        <button onclick="deleteFood(${item.id})" style="background:none; border:none; color:#e74c3c; cursor:pointer; font-size:1.1rem;" title="Delete Dish"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterFoodTable() {
+            const query = document.getElementById('food-search-input').value.toLowerCase();
+            const filtered = allFoods.filter(f => f.name.toLowerCase().includes(query) || f.category.toLowerCase().includes(query));
+            renderTable(filtered);
+        }
+
+        async function deleteFood(id) {
+            if (confirm('Are you sure you want to delete this food item?')) {
+                try {
+                    const res = await fetch(`/api/delete-food/${id}`, { method: 'DELETE' });
+                    const data = await res.json();
+                    if (data.success) {
+                        alert('Food item deleted successfully');
+                        fetchFoods();
+                    }
+                } catch (err) {
+                    alert('Error deleting item');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

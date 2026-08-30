@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exclusive Offers & Deals - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .timer-box { display: flex; gap: 15px; justify-content: center; margin-top: 15px; }
+        .timer-unit { background: rgba(255,255,255,0.2); padding: 10px 18px; border-radius: 12px; font-weight: 800; font-size: 1.3rem; text-align: center; border: 1px solid rgba(255,255,255,0.3); }
+        .timer-unit span { display: block; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; }
+        .coupon-card { background: var(--card-bg); border-radius: 16px; border: 2px dashed var(--secondary); padding: 25px; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
+        .coupon-code { background: rgba(255,107,0,0.1); color: var(--secondary); font-weight: 800; font-size: 1.2rem; padding: 6px 16px; border-radius: 20px; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1 class="dynamic-restaurant-name">MGM DABHA</h1>
+                    <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine</span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html"><i class="fas fa-utensils"></i> Menu</a>
+                <a href="offers.html" class="active"><i class="fas fa-tags"></i> Offers</a>
+                <a href="reservation.html"><i class="fas fa-calendar-alt"></i> Reservation</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+            <div class="nav-actions">
+                <a href="cart.html" class="icon-btn" title="View Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="badge-count cart-count-badge">0</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Banner & Live Countdown Timer -->
+    <div style="background: linear-gradient(135deg, var(--primary), #4a0000); color:#FFF; padding: 60px 0; text-align:center;">
+        <div class="container">
+            <span class="hero-badge"><i class="fas fa-fire" style="color:var(--accent);"></i> Limited Time Deals</span>
+            <h1 style="font-size:2.6rem; font-weight:800; margin:10px 0;">Today's Festival Offers & Coupons</h1>
+            <p style="font-size:1.1rem; color:rgba(255,255,255,0.85);">Hurry up! Special discounts end in:</p>
+            
+            <div class="timer-box">
+                <div class="timer-unit"><div id="timer-hours">05</div><span>Hours</span></div>
+                <div class="timer-unit"><div id="timer-mins">42</div><span>Minutes</span></div>
+                <div class="timer-unit"><div id="timer-secs">18</div><span>Seconds</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Offers Section -->
+    <section class="section-padding">
+        <div class="container">
+            <h2 class="section-title text-center" style="margin-bottom:35px;">Active Discount Coupons</h2>
+            
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px; margin-bottom:50px;">
+                <div class="coupon-card">
+                    <div>
+                        <span style="font-size:0.8rem; color:var(--secondary); font-weight:700;">FLAT 20% OFF</span>
+                        <h3 style="color:var(--primary); font-size:1.2rem;">Welcome Offer</h3>
+                        <p style="font-size:0.85rem; color:gray;">Valid on first order above ₹299</p>
+                    </div>
+                    <div>
+                        <div class="coupon-code">MGM20</div>
+                        <button onclick="copyCoupon('MGM20')" class="btn btn-sm btn-secondary" style="margin-top:8px; width:100%;">Copy Code</button>
+                    </div>
+                </div>
+
+                <div class="coupon-card">
+                    <div>
+                        <span style="font-size:0.8rem; color:#2ECC71; font-weight:700;">FREE DELIVERY</span>
+                        <h3 style="color:var(--primary); font-size:1.2rem;">Free Express Delivery</h3>
+                        <p style="font-size:0.85rem; color:gray;">Valid on all orders above ₹499</p>
+                    </div>
+                    <div>
+                        <div class="coupon-code" style="color:#2ECC71; background:rgba(46,204,113,0.1);">FREEDEL</div>
+                        <button onclick="copyCoupon('FREEDEL')" class="btn btn-sm btn-primary" style="margin-top:8px; width:100%;">Copy Code</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Combo Deals -->
+            <h2 class="section-title text-center" style="margin-bottom:35px;">Bestselling Combo Deals</h2>
+            <div class="festival-grid">
+                <div class="festival-card">
+                    <span class="festival-tag">FAMILY FEAST</span>
+                    <h3>Mega Family Biryani Combo</h3>
+                    <p>2 Chicken Biryanis + 1 Tandoori Chicken Half + Chicken 65 + 2 Drinks.</p>
+                    <strong style="font-size:1.3rem; color:var(--accent);">₹999 (Save ₹350)</strong>
+                </div>
+
+                <div class="festival-card" style="background: linear-gradient(135deg, #2E7D32, #66BB6A);">
+                    <span class="festival-tag">WEEKEND SPECIAL</span>
+                    <h3>Mutton Biryani Feast</h3>
+                    <p>Buy 2 Mutton Dum Biryanis and get 1 Chicken 65 FREE!</p>
+                    <strong style="font-size:1.3rem; color:#FFF;">BUY 2 GET 1 FREE</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA – All Rights Reserved. Made with ❤️ in Dharmapuri, Tamil Nadu.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script>
+        function copyCoupon(code) {
+            navigator.clipboard.writeText(code);
+            alert(`Coupon code ${code} copied to clipboard!`);
+        }
+
+        // Live Countdown Timer
+        let secondsLeft = 20538;
+        setInterval(() => {
+            secondsLeft--;
+            const h = Math.floor(secondsLeft / 3600);
+            const m = Math.floor((secondsLeft % 3600) / 60);
+            const s = secondsLeft % 60;
+            document.getElementById('timer-hours').textContent = String(h).padStart(2, '0');
+            document.getElementById('timer-mins').textContent = String(m).padStart(2, '0');
+            document.getElementById('timer-secs').textContent = String(s).padStart(2, '0');
+        }, 1000);
+    </script>
+</body>
+</html>

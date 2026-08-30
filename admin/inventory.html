@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management & Alerts - MGM DABHA Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .row-low-stock { background-color: rgba(231, 76, 60, 0.12) !important; border-left: 4px solid #e74c3c; }
+    </style>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-utensils"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>ADMIN ENTERPRISE</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="add-food.html" class="menu-item"><i class="fas fa-plus-circle"></i> Add Food</a>
+            <a href="manage-food.html" class="menu-item"><i class="fas fa-hamburger"></i> Manage Foods</a>
+            <a href="inventory.html" class="menu-item active"><i class="fas fa-boxes"></i> Inventory Stock</a>
+            <a href="orders.html" class="menu-item"><i class="fas fa-shopping-cart"></i> Orders</a>
+            <a href="reservations.html" class="menu-item"><i class="fas fa-calendar-check"></i> Reservations</a>
+            <a href="users.html" class="menu-item"><i class="fas fa-users"></i> Customers</a>
+            <a href="reports.html" class="menu-item"><i class="fas fa-file-invoice-dollar"></i> Reports</a>
+            <a href="contact-settings.html" class="menu-item"><i class="fas fa-cog"></i> Settings</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h3>Food Stock Inventory & Low Stock Alerts</h3>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Inventory Control</h1>
+                <span style="color:#e74c3c; font-size:0.88rem; font-weight:700;"><i class="fas fa-triangle-exclamation"></i> Low stock items (< 10 units) highlighted in RED</span>
+            </div>
+
+            <div class="table-card">
+                <div class="table-responsive">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Food Item</th>
+                                <th>Category</th>
+                                <th>Stock Qty</th>
+                                <th>Stock Badge</th>
+                                <th>Availability Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-tbody">
+                            <tr><td colspan="6" class="text-center" style="padding:30px;">Loading inventory items...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchInventory);
+
+        async function fetchInventory() {
+            try {
+                const res = await fetch('/api/menu');
+                const data = await res.json();
+                if (data.success) {
+                    renderInventory(data.menu);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function renderInventory(list) {
+            const tbody = document.getElementById('inventory-tbody');
+            if (list.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center" style="padding:30px;">No inventory items.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = list.map(item => {
+                const stock = item.stock_quantity || 50;
+                const isAvail = item.is_available === 1;
+                const isLowStock = stock < 10;
+                const isOutOfStock = stock <= 0 || !isAvail;
+
+                return `
+                    <tr class="${isLowStock ? 'row-low-stock' : ''}">
+                        <td style="display:flex; align-items:center; gap:12px;">
+                            <img src="${item.image_url}" style="width:40px; height:40px; border-radius:6px; object-fit:cover;">
+                            <div>
+                                <strong>${item.name}</strong>
+                                ${isLowStock ? `<div style="color:#e74c3c; font-size:0.75rem; font-weight:700;"><i class="fas fa-exclamation-triangle"></i> LOW STOCK ALERT!</div>` : ''}
+                            </div>
+                        </td>
+                        <td>${item.category}</td>
+                        <td>
+                            <input type="number" id="stock-${item.id}" value="${stock}" style="width:80px; padding:6px 10px; border-radius:6px; border:1px solid var(--border-color); font-weight:700; ${isLowStock ? 'color:#e74c3c; border-color:#e74c3c;' : ''}">
+                        </td>
+                        <td>
+                            <span class="${isOutOfStock ? 'stock-out' : 'stock-in'}">${isOutOfStock ? 'Out of Stock' : (isLowStock ? 'Low Stock' : 'In Stock')}</span>
+                        </td>
+                        <td>
+                            <select id="avail-${item.id}" class="status-select">
+                                <option value="1" ${isAvail ? 'selected' : ''}>Available</option>
+                                <option value="0" ${!isAvail ? 'selected' : ''}>Out of Stock</option>
+                            </select>
+                        </td>
+                        <td>
+                            <button onclick="updateStock(${item.id})" class="btn" style="background:var(--admin-secondary); color:#FFF; padding:6px 14px; border-radius:6px; font-size:0.8rem; border:none; cursor:pointer;"><i class="fas fa-save"></i> Save</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function updateStock(foodId) {
+            const stock_quantity = parseInt(document.getElementById(`stock-${foodId}`).value);
+            const is_available = parseInt(document.getElementById(`avail-${foodId}`).value);
+
+            try {
+                const res = await fetch('/api/inventory/update', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ food_id: foodId, stock_quantity, is_available })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Inventory updated successfully!');
+                    fetchInventory();
+                }
+            } catch (err) {
+                alert('Failed to update inventory');
+            }
+        }
+    </script>
+</body>
+</html>

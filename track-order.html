@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Order Tracking - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .timeline-container { position: relative; margin: 40px 0; }
+        .timeline-progress-bar { position: absolute; top: 20px; left: 10%; right: 10%; height: 4px; background: #E2E8F0; z-index: 1; }
+        .timeline-progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 60%; background: var(--secondary); transition: width 0.5s ease; }
+        .timeline-steps { display: flex; justify-content: space-between; position: relative; z-index: 2; }
+        .timeline-step { display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .timeline-icon { width: 44px; height: 44px; border-radius: 50%; background: #FFF; border: 3px solid #E2E8F0; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; color: #888; margin-bottom: 8px; transition: var(--transition); }
+        .timeline-step.active .timeline-icon { background: var(--secondary); border-color: var(--secondary); color: #FFF; box-shadow: 0 4px 15px rgba(255,107,0,0.4); }
+        .timeline-step.completed .timeline-icon { background: #2ECC71; border-color: #2ECC71; color: #FFF; }
+        .timeline-label { font-size: 0.85rem; font-weight: 700; color: var(--text-dark); }
+        .timeline-time { font-size: 0.75rem; color: gray; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1 class="dynamic-restaurant-name">MGM DABHA</h1>
+                    <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine</span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html"><i class="fas fa-utensils"></i> Menu</a>
+                <a href="cart.html"><i class="fas fa-shopping-bag"></i> Cart</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container section-padding">
+        <div class="glass-card" style="padding:35px; border-radius:20px; max-width:850px; margin:0 auto;">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding-bottom:20px; margin-bottom:25px;">
+                <div>
+                    <h2 style="color:var(--primary); font-size:1.5rem; margin:0;" id="track-order-id">Order #MGM-1042</h2>
+                    <span style="font-size:0.85rem; color:gray;" id="track-order-date">Placed at 12:45 PM • Estimated Arrival: 25 Mins</span>
+                </div>
+                <span class="status-badge status-open" style="font-size:0.9rem; padding:6px 16px;"><i class="fas fa-motorcycle"></i> Out for Delivery</span>
+            </div>
+
+            <!-- Timeline -->
+            <div class="timeline-container">
+                <div class="timeline-progress-bar"><div class="timeline-progress-fill" id="progress-fill" style="width:75%;"></div></div>
+                <div class="timeline-steps">
+                    <div class="timeline-step completed">
+                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                        <div class="timeline-label">Order Placed</div>
+                        <div class="timeline-time">12:45 PM</div>
+                    </div>
+                    <div class="timeline-step completed">
+                        <div class="timeline-icon"><i class="fas fa-check"></i></div>
+                        <div class="timeline-label">Accepted</div>
+                        <div class="timeline-time">12:47 PM</div>
+                    </div>
+                    <div class="timeline-step completed">
+                        <div class="timeline-icon"><i class="fas fa-fire"></i></div>
+                        <div class="timeline-label">Preparing</div>
+                        <div class="timeline-time">12:50 PM</div>
+                    </div>
+                    <div class="timeline-step active">
+                        <div class="timeline-icon"><i class="fas fa-motorcycle"></i></div>
+                        <div class="timeline-label">On The Way</div>
+                        <div class="timeline-time">01:05 PM</div>
+                    </div>
+                    <div class="timeline-step">
+                        <div class="timeline-icon"><i class="fas fa-home"></i></div>
+                        <div class="timeline-label">Delivered</div>
+                        <div class="timeline-time">01:15 PM</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Partner Info -->
+            <div style="background:var(--bg-main); padding:20px; border-radius:14px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; margin-top:35px;">
+                <div style="display:flex; align-items:center; gap:15px;">
+                    <div style="width:50px; height:50px; border-radius:50%; background:var(--secondary); color:#FFF; display:flex; align-items:center; justify-content:center; font-size:1.4rem; font-weight:700;">D</div>
+                    <div>
+                        <strong style="font-size:1.05rem; display:block;">Dhinesh Kumar (Rider)</strong>
+                        <span style="font-size:0.82rem; color:gray;">Vehicle: TN29AB1234 • MGM Delivery Partner</span>
+                    </div>
+                </div>
+                <a href="tel:+919345841117" class="btn btn-primary btn-sm"><i class="fas fa-phone"></i> Call Rider</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA – All Rights Reserved. Made with ❤️ in Dharmapuri, Tamil Nadu.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

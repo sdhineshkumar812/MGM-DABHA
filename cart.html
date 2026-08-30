@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - MGM DABHA Version 3.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                <div class="logo-text">
+                    <h1>MGM DABHA</h1>
+                    <span>Authentic Taste | உண்மையான சுவை</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="menu.html">Menu</a>
+                <a href="reservation.html">Reservation</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <button class="icon-btn theme-toggle"><i class="fas fa-moon"></i></button>
+                <a href="cart.html" class="icon-btn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="badge-count cart-count-badge">0</span>
+                </a>
+                <div id="nav-auth-container"></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="section-padding">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:30px;">
+                <h1 class="section-title">Your Food Cart</h1>
+            </div>
+
+            <div class="cart-table-wrapper">
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Dish Item</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Total</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-items-tbody">
+                        <!-- Loaded dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:30px;" id="cart-summary-box">
+                <!-- Coupon Applicator -->
+                <div style="background:var(--card-bg); padding:25px; border-radius:var(--radius); border:1px solid var(--border-color); box-shadow:var(--shadow);">
+                    <h3 style="margin-bottom:15px; font-size:1.1rem;"><i class="fas fa-ticket-alt" style="color:var(--secondary);"></i> Apply Discount Coupon</h3>
+                    <div style="display:flex; gap:10px;">
+                        <input type="text" id="coupon-input" placeholder="e.g. MGM20, BIRYANI50" class="form-control" style="text-transform:uppercase;">
+                        <button onclick="applyCouponCode()" class="btn btn-primary btn-sm">Apply</button>
+                    </div>
+                    <div style="font-size:0.8rem; color:gray; margin-top:12px; display:flex; flex-direction:column; gap:4px;">
+                        <span>✔ <strong>MGM20</strong>: Flat 20% OFF on order subtotal</span>
+                        <span>✔ <strong>BIRYANI50</strong>: ₹50 OFF on orders above ₹300</span>
+                        <span>✔ <strong>FREEDELIVERY</strong>: Free Delivery charge above ₹200</span>
+                    </div>
+                </div>
+
+                <!-- Price Summary -->
+                <div class="summary-card">
+                    <h3 style="margin-bottom:20px; font-size:1.2rem; border-bottom:1px solid var(--border-color); padding-bottom:10px;">Order Calculation</h3>
+                    <div class="summary-row">
+                        <span>Items Subtotal</span>
+                        <strong id="cart-subtotal">₹0.00</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Coupon Discount</span>
+                        <strong id="cart-discount" style="color:#2ecc71;">-₹0.00</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery Charge</span>
+                        <strong id="cart-delivery">₹40.00</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>GST & Packaging (5%)</span>
+                        <strong id="cart-tax">₹0.00</strong>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Grand Total</span>
+                        <strong id="cart-total">₹0.00</strong>
+                    </div>
+                    
+                    <div style="margin-top:25px; display:flex; flex-direction:column; gap:12px;">
+                        <a href="checkout.html" class="btn btn-primary" style="width:100%;"><i class="fas fa-credit-card"></i> Proceed to Checkout</a>
+                        <a href="menu.html" class="btn btn-secondary" style="width:100%; text-align:center;"><i class="fas fa-arrow-left"></i> Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container text-center">
+            <p>&copy; 2026 MGM DABHA. Authentic Taste | உண்மையான சுவை.</p>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

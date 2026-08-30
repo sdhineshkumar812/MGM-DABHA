@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MGM DABHA - Enterprise Restaurant SaaS Platform | Dharmapuri</title>
+    <meta name="description" content="MGM DABHA serves delicious South Indian, North Indian, Chinese and Tandoori dishes with fresh ingredients, affordable prices and fast 25-35 min express delivery in Dharmapuri.">
+    
+    <!-- Open Graph SEO Meta Tags -->
+    <meta property="og:title" content="MGM DABHA - Enterprise Restaurant SaaS Platform Dharmapuri">
+    <meta property="og:description" content="Order authentic South Indian Dum Biryani, Tandoori, and Chinese delicacies online for express home delivery in Palacode, Dharmapuri.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1200">
+    <meta property="og:type" content="website">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+</head>
+<body>
+
+    <!-- Loading Splash Screen -->
+    <div id="loading-screen">
+        <div class="loader-spinner"></div>
+        <h2 id="splash-name" style="color:var(--accent); font-weight:800; letter-spacing:1px;">MGM DABHA</h2>
+        <p id="splash-tagline" style="font-size:0.85rem; color:#AAA;">Authentic South Indian & Multi-Cuisine Family Restaurant</p>
+    </div>
+
+    <!-- Live Offers Marquee Announcement Bar -->
+    <div class="offers-marquee-bar">
+        <div class="marquee-content">
+            <span class="marquee-item"><i class="fas fa-fire" style="color:var(--accent);"></i> FLAT 20% OFF TODAY WITH CODE: MGM20</span>
+            <span class="marquee-item"><i class="fas fa-truck-fast" style="color:var(--accent);"></i> FREE HOME DELIVERY ON ORDERS ABOVE ₹499</span>
+            <span class="marquee-item"><i class="fas fa-gift" style="color:var(--accent);"></i> SPIN THE WHEEL & WIN INSTANT DAILY COUPONS</span>
+        </div>
+    </div>
+
+    <!-- Top Info Bar -->
+    <div class="top-bar">
+        <div class="container top-bar-content">
+            <div class="top-info">
+                <span><i class="fas fa-location-dot" style="color:var(--secondary);"></i> <span class="dynamic-address">Tomato Market Opposite MGM DABHA, Palacode, Dharmapuri, TN – 636806</span></span>
+                <span><i class="fas fa-phone" style="color:var(--secondary);"></i> <span class="dynamic-phone">+91 9345841117</span></span>
+            </div>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <div id="live-status-container">
+                    <span class="status-badge status-open"><i class="fas fa-circle"></i> 🟢 Open Daily (07:00 AM - 11:00 PM)</span>
+                </div>
+                <button class="icon-btn theme-toggle" title="Toggle Dark Theme" style="width:32px; height:32px;"><i class="fas fa-moon"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Translucent Scroll-Sensing Sticky Header -->
+    <header class="header-main">
+        <div class="container nav-wrapper">
+            <a href="index.html" class="logo-group">
+                <div class="logo-icon"><img id="dyn-logo-img" src="images/logo.png" alt="Logo" style="width:32px; height:32px; object-fit:contain;" onerror="this.style.display='none'"></div>
+                <div class="logo-text">
+                    <h1 class="dynamic-restaurant-name">MGM DABHA</h1>
+                    <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+                <a href="menu.html"><i class="fas fa-utensils"></i> Menu</a>
+                <a href="offers.html"><i class="fas fa-tags"></i> Offers</a>
+                <a href="#gallery"><i class="fas fa-images"></i> Gallery</a>
+                <a href="reservation.html"><i class="fas fa-calendar-alt"></i> Reservation</a>
+                <a href="contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="menu.html" class="btn btn-sm btn-secondary" style="border-radius:20px;"><i class="fas fa-bolt"></i> Order Now</a>
+                <a href="cart.html" class="icon-btn" title="View Cart">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="badge-count cart-count-badge">0</span>
+                </a>
+                <div id="nav-auth-container">
+                    <a href="login.html" class="btn btn-sm btn-primary"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </div>
+                <div class="hamburger"><i class="fas fa-bars"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Luxury Hero Slider & Metric Badges -->
+    <section class="hero-slider">
+        <div class="hero-slide active" id="hero-banner-slide" style="background-image: url('https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=1600');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=1600');"></div>
+        <div class="hero-slide" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1600');"></div>
+        
+        <div class="hero-overlay"></div>
+
+        <div class="container hero-content">
+            <span class="hero-badge"><i class="fas fa-crown" style="color:var(--accent);"></i> Dharmapuri's Premier Family Dining</span>
+            <h1 class="hero-title">Taste <span class="dynamic-restaurant-name">MGM DABHA</span> Specialties</h1>
+            <p class="hero-description dynamic-tagline">Authentic South Indian & Multi-Cuisine Family Restaurant</p>
+            
+            <!-- Hero Metrics Badges -->
+            <div class="hero-metrics-grid">
+                <div class="hero-badge-card"><i class="fas fa-star" style="color:var(--accent);"></i> 4.8 / 5 Rating</div>
+                <div class="hero-badge-card"><i class="fas fa-stopwatch" style="color:var(--secondary);"></i> 25–35 Mins Express Delivery</div>
+                <div class="hero-badge-card"><i class="fas fa-truck-fast" style="color:#2ECC71;"></i> Free Delivery Above ₹499</div>
+            </div>
+
+            <div class="hero-btns" style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
+                <a href="menu.html" class="btn btn-primary"><i class="fas fa-utensils"></i> Order Food Online</a>
+                <a href="reservation.html" class="btn btn-secondary"><i class="fas fa-calendar-check"></i> Reserve a Table</a>
+                <button onclick="openSpinWheelModal()" class="btn btn-accent"><i class="fas fa-dharmachakra"></i> Spin & Win Coupon</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Today's Special Section -->
+    <section class="section-padding" style="background: var(--bg-main);">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title">Today's Special Dishes</h2>
+                <p class="section-subtitle">Chef's daily hand-picked mouthwatering delicacies with special discounts</p>
+            </div>
+            <div class="food-grid" id="food-grid"></div>
+        </div>
+    </section>
+
+    <!-- Food Gallery Masonry & Lightbox Modal -->
+    <section id="gallery" class="section-padding" style="background: var(--card-bg);">
+        <div class="container">
+            <div class="text-center">
+                <h2 class="section-title">Food & Restaurant Gallery</h2>
+                <p class="section-subtitle">Take a glance at our culinary creations and luxury dining ambience</p>
+            </div>
+
+            <!-- Filter Chips -->
+            <div class="gallery-filter-chips">
+                <button class="chip-btn active" onclick="filterGallery('all', this)">All Category</button>
+                <button class="chip-btn" onclick="filterGallery('biryani', this)">Biryani</button>
+                <button class="chip-btn" onclick="filterGallery('dosa', this)">Dosa</button>
+                <button class="chip-btn" onclick="filterGallery('tandoori', this)">Tandoori</button>
+                <button class="chip-btn" onclick="filterGallery('chicken', this)">Chicken 65</button>
+            </div>
+
+            <!-- Gallery Grid -->
+            <div class="gallery-grid">
+                <div class="gallery-item" data-category="biryani" onclick="openLightbox('https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800')">
+                    <img src="https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=600" alt="Biryani">
+                    <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+
+                <div class="gallery-item" data-category="tandoori" onclick="openLightbox('https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800')">
+                    <img src="https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=600" alt="Tandoori">
+                    <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+
+                <div class="gallery-item" data-category="dosa" onclick="openLightbox('https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=800')">
+                    <img src="https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=600" alt="Special Dosa">
+                    <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+
+                <div class="gallery-item" data-category="chicken" onclick="openLightbox('https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800')">
+                    <img src="https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=600" alt="Chicken 65">
+                    <div class="gallery-overlay"><i class="fas fa-search-plus"></i></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lightbox Popup Modal -->
+    <div id="lightbox-modal" class="lightbox-modal">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" class="lightbox-img" src="" alt="Popup Preview">
+    </div>
+
+    <!-- Location Map Section -->
+    <section class="section-padding" style="background:var(--card-bg);">
+        <div class="container">
+            <div class="text-center" style="margin-bottom:30px;">
+                <h2 class="section-title">Visit MGM DABHA</h2>
+                <p class="section-subtitle dynamic-address">Tomato Market Opposite MGM DABHA, Palacode, Dharmapuri, TN – 636806</p>
+                <div style="display:flex; gap:12px; justify-content:center; margin-top:12px;">
+                    <a href="tel:+919345841117" class="btn btn-primary btn-sm"><i class="fas fa-phone-alt"></i> Call Us</a>
+                    <a href="https://wa.me/919345841117" target="_blank" class="btn btn-secondary btn-sm dynamic-whatsapp-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806" target="_blank" class="btn btn-accent btn-sm"><i class="fas fa-location-arrow"></i> Directions</a>
+                </div>
+            </div>
+            <div style="border-radius:var(--radius); overflow:hidden; border:1px solid var(--border-color); height:380px; box-shadow:var(--shadow);">
+                <iframe id="dyn-google-map" src="https://maps.google.com/maps?q=Tomato+Market+Dharmapuri+Tamil+Nadu+636806&output=embed" style="width:100%; height:100%; border:0;"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Actions Cluster -->
+    <div class="floating-actions">
+        <button onclick="openSpinWheelModal()" class="float-btn float-ai" title="Spin & Win Coupon"><i class="fas fa-dharmachakra"></i></button>
+        <a href="https://wa.me/919345841117" target="_blank" class="float-btn float-whatsapp dynamic-whatsapp-btn" title="Order via WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        <a href="tel:+919345841117" class="float-btn float-call" title="Call Restaurant"><i class="fas fa-phone"></i></a>
+        <a href="cart.html" class="float-btn float-cart" title="View Cart"><i class="fas fa-shopping-bag"></i><span class="badge-count cart-count-badge">0</span></a>
+        <button id="back-to-top" class="float-btn float-top" title="Back to Top"><i class="fas fa-arrow-up"></i></button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="logo-group" style="margin-bottom:15px;">
+                        <div class="logo-icon"><i class="fas fa-utensils"></i></div>
+                        <div class="logo-text">
+                            <h1 style="color:#FFF;" class="dynamic-restaurant-name">MGM DABHA</h1>
+                            <span class="dynamic-tagline">Authentic South Indian & Multi-Cuisine</span>
+                        </div>
+                    </div>
+                    <p style="font-size:0.85rem; color:#AAA;">MGM DABHA serves delicious South Indian, North Indian, Chinese and Tandoori dishes with fresh ingredients, affordable prices and fast service for families and friends.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html"><i class="fas fa-angle-right"></i> Home</a></li>
+                        <li><a href="menu.html"><i class="fas fa-angle-right"></i> Full Menu</a></li>
+                        <li><a href="offers.html"><i class="fas fa-angle-right"></i> Offers & Deals</a></li>
+                        <li><a href="admin/reports.html" target="_blank" style="color:var(--accent);"><i class="fas fa-chart-line"></i> Analytics & Reports</a></li>
+                        <li><a href="admin/contact-settings.html" target="_blank" style="color:var(--accent);"><i class="fas fa-cog"></i> Admin Settings</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact Information</h3>
+                    <p style="font-size:0.88rem; margin-bottom:8px;"><i class="fas fa-map-marker-alt" style="color:var(--secondary);"></i> <span class="dynamic-address">Tomato Market Opposite MGM DABHA, Palacode, Dharmapuri – 636806</span></p>
+                    <p style="font-size:0.88rem; margin-bottom:8px;"><i class="fas fa-phone" style="color:var(--secondary);"></i> <span class="dynamic-phone">+91 9345841117</span></p>
+                    <p style="font-size:0.88rem;"><i class="fas fa-envelope" style="color:var(--secondary);"></i> <span class="dynamic-email">sdhineshkumar7576@gmail.com</span></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 <span class="dynamic-restaurant-name">MGM DABHA</span> – All Rights Reserved. Made with ❤️ in Dharmapuri, Tamil Nadu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/script.js"></script>
+    <script src="js/spin-wheel.js"></script>
+</body>
+</html>

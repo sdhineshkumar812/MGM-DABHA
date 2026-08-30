@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Owner Dashboard - MGM DABHA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../admin/admin.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <aside class="admin-sidebar">
+        <div class="sidebar-header">
+            <div class="sidebar-logo-icon"><i class="fas fa-crown"></i></div>
+            <div class="sidebar-brand">
+                <h2>MGM DABHA</h2>
+                <span>OWNER PORTAL</span>
+            </div>
+        </div>
+        <div class="sidebar-menu">
+            <a href="dashboard.html" class="menu-item active"><i class="fas fa-chart-line"></i> Owner Executive</a>
+            <a href="../admin/dashboard.html" class="menu-item"><i class="fas fa-cog"></i> Admin Dashboard</a>
+            <a href="../kitchen/dashboard.html" class="menu-item"><i class="fas fa-fire-burner"></i> Kitchen KDS</a>
+            <a href="../delivery/dashboard.html" class="menu-item"><i class="fas fa-motorcycle"></i> Delivery Portal</a>
+            <a href="../index.html" class="menu-item"><i class="fas fa-store"></i> Customer Site</a>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <h3>Executive Owner Profit & Revenue Command Center</h3>
+        </header>
+
+        <div class="admin-body">
+            <div class="page-title-box">
+                <h1 class="page-title">Profitability & Financial Overview</h1>
+            </div>
+
+            <!-- Profitability Summary Cards -->
+            <div class="stat-cards-grid">
+                <div class="stat-card">
+                    <div class="stat-icon bg-green"><i class="fas fa-rupee-sign"></i></div>
+                    <div class="stat-details">
+                        <h3 id="owner-total-rev">₹0.00</h3>
+                        <p>Gross Revenue</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-red"><i class="fas fa-receipt"></i></div>
+                    <div class="stat-details">
+                        <h3 id="owner-total-exp">₹9,800.00</h3>
+                        <p>Total Expenses</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue"><i class="fas fa-wallet"></i></div>
+                    <div class="stat-details">
+                        <h3 id="owner-net-profit" style="color:#2ecc71;">₹0.00</h3>
+                        <p>Net Calculated Profit</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple"><i class="fas fa-users"></i></div>
+                    <div class="stat-details">
+                        <h3 id="owner-customer-count">0</h3>
+                        <p>Total Customers</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expense Tracker & Profit Calculator Form -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:25px; margin-top:25px;">
+                <div class="table-card" style="padding:25px;">
+                    <h3 style="font-size:1.1rem; color:var(--admin-primary); margin-bottom:15px;"><i class="fas fa-plus-circle"></i> Add Restaurant Expense</h3>
+                    <form onsubmit="handleAddExpense(event)">
+                        <div class="form-group">
+                            <label>Expense Title</label>
+                            <input type="text" id="exp-title" placeholder="e.g. Raw Meat Supply" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (₹)</label>
+                            <input type="number" id="exp-amount" placeholder="e.g. 2500" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="exp-cat" class="form-control">
+                                <option value="Raw Materials">Raw Materials</option>
+                                <option value="Utilities">Utilities (Electricity/Gas)</option>
+                                <option value="Staff Salaries">Staff Salaries</option>
+                                <option value="Marketing">Marketing</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width:100%; background:var(--admin-secondary); color:#FFF; border:none; padding:10px; border-radius:8px; cursor:pointer;"><i class="fas fa-save"></i> Save Expense</button>
+                    </form>
+                </div>
+
+                <!-- Recent Expenses List -->
+                <div class="table-card" style="padding:25px;">
+                    <h3 style="font-size:1.1rem; color:var(--admin-primary); margin-bottom:15px;"><i class="fas fa-file-invoice-dollar"></i> Recent Expenses</h3>
+                    <div id="owner-expenses-list" style="display:flex; flex-direction:column; gap:10px; max-height:260px; overflow-y:auto;"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadOwnerData);
+
+        async function loadOwnerData() {
+            try {
+                const res = await fetch('/api/owner/summary');
+                const data = await res.json();
+                if (data.success) {
+                    const gross = parseFloat(data.grossRevenue || 0);
+                    const exp = parseFloat(data.totalExpenses || 9800);
+                    const net = gross - exp;
+
+                    document.getElementById('owner-total-rev').textContent = `₹${gross.toFixed(2)}`;
+                    document.getElementById('owner-total-exp').textContent = `₹${exp.toFixed(2)}`;
+                    document.getElementById('owner-net-profit').textContent = `₹${net.toFixed(2)}`;
+                    document.getElementById('owner-customer-count').textContent = data.totalCustomers || 0;
+
+                    renderExpenses(data.expenses);
+                }
+            } catch (err) {}
+        }
+
+        function renderExpenses(list) {
+            const box = document.getElementById('owner-expenses-list');
+            if (!list || list.length === 0) {
+                box.innerHTML = '<p style="color:gray;">No expenses logged.</p>';
+                return;
+            }
+
+            box.innerHTML = list.map(e => `
+                <div style="display:flex; justify-content:space-between; padding:10px; background:var(--bg-main); border-radius:8px; border:1px solid var(--border-color);">
+                    <div>
+                        <strong>${e.title}</strong>
+                        <div style="font-size:0.75rem; color:gray;">${e.category}</div>
+                    </div>
+                    <strong style="color:#e74c3c;">-₹${parseFloat(e.amount).toFixed(2)}</strong>
+                </div>
+            `).join('');
+        }
+
+        async function handleAddExpense(e) {
+            e.preventDefault();
+            const title = document.getElementById('exp-title').value;
+            const amount = document.getElementById('exp-amount').value;
+            const category = document.getElementById('exp-cat').value;
+
+            try {
+                const res = await fetch('/api/owner/expenses', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, amount, category })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Expense logged successfully!');
+                    e.target.reset();
+                    loadOwnerData();
+                }
+            } catch (err) {}
+        }
+    </script>
+</body>
+</html>
