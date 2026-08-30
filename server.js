@@ -1,10 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -103,21 +103,34 @@ let defaultContactSettings = {
 
 async function initDB() {
     try {
+        const dbHost = process.env.DB_HOST;
+        const dbPort = parseInt(process.env.DB_PORT || '3306');
+        const dbUser = process.env.DB_USER;
+        const dbPassword = process.env.DB_PASSWORD;
+        const dbName = process.env.DB_NAME;
+
+        if (!dbHost || dbHost.includes('your_railway_mysql_host')) {
+            throw new Error('Railway MySQL environment variables contain placeholder values.');
+        }
+
         pool = mysql.createPool({
-            host: process.env.DB_HOST || 'localhost',
-            user: process.env.DB_USER || 'root',
-            password: process.env.DB_PASSWORD || '',
-            database: process.env.DB_NAME || 'mgm_dabha',
+            host: dbHost,
+            port: isNaN(dbPort) ? 3306 : dbPort,
+            user: dbUser,
+            password: dbPassword,
+            database: dbName,
             waitForConnections: true,
             connectionLimit: 10,
             queueLimit: 0
         });
+
         const conn = await pool.getConnection();
-        console.log('✅ Connected to MySQL Database: mgm_dabha');
+        console.log('Railway MySQL Connected Successfully');
         conn.release();
         dbType = 'mysql';
     } catch (err) {
-        console.warn('⚠️ MySQL unavailable, running embedded SQLite DB engine');
+        console.warn('⚠️ Connection to Railway MySQL failed:', err.message);
+        console.warn('⚠️ Running embedded SQLite DB engine as fallback');
         dbType = 'sqlite';
         const dbPath = path.join(__dirname, 'mgm_dabha.sqlite');
         sqliteDb = new sqlite3.Database(dbPath);
@@ -381,6 +394,6 @@ app.get('*', (req, res) => {
 
 initDB().then(() => {
     app.listen(PORT, () => {
-        console.log(`🚀 MGM DABHA Palacode Dharmapuri Official Server running at http://localhost:${PORT}`);
+        console.log(`Server running on port ${PORT}`);
     });
 });
